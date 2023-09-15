@@ -4,7 +4,7 @@ import Link from 'next/link'
 import LogOutButton from './LogOutButton';
 
 function Header() {
-    const session = false;
+    const session = true;
 
     if (session) 
     return(
