@@ -1,10 +1,13 @@
+'use client'
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import LogOutButton from './LogOutButton';
+import { useSession } from 'next-auth/react'
 
 function Header() {
-    const session = true;
+    //const session = true;
+    const { data: session } = useSession();
 
     if (session) 
     return(
@@ -15,14 +18,14 @@ function Header() {
             <div className='flex space-x-2'>
             <Image 
                 className='rounded-full mx-2 object-contain'
-                src='/selfie2.jpg'
+                src={session.user?.image!}
                 alt='profile picture'
                 width="50"
                 height="10" 
             />
             <div className='flex flex-col text-left justify-center'>
                 <p className='text-[10px] sm:text-sm text-blue-400'>Logged in as:</p>
-                <p className='text-sm font-bold sm:text-lg'>Afiqah Rahman</p>
+                <p className='text-sm font-bold sm:text-lg'>{session.user?.name}</p>
             </div>
             </div>
 
@@ -47,13 +50,13 @@ function Header() {
                     <p className='text-blue-400'>Welcome to Meta Messanger</p>
                 </div>
 
-                <Link 
+                {/* <Link 
                 href='/auth/signin' 
                 className='bg-blue-400 hover:bg-blue-700 text-white rounded font-xs 
                 sm:font-sm font-bold
                 py-1 px-2 sm:py-2 sm:px-4'>
                     Sign In
-                </Link>
+                </Link> */}
             </div> 
         </header>
     ) 

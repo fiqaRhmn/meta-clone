@@ -6,7 +6,11 @@ import useSWR from 'swr';
 import MessageComponents from './MessageComponents';
 import { clientPusher } from '@/pusher';
 
-function MessageList() {
+type Props = {
+    initialMessages: Message[]
+}
+
+function MessageList({initialMessages}:Props) {
   // Fetch messages using SWR
   const { data: messages, error, mutate } = useSWR<Message[]>('/api/getMessages', fetcher);
 
@@ -33,13 +37,13 @@ function MessageList() {
   }, [messages, mutate, clientPusher]);  
 
   return (
-    <div className='space-y-3 px-3 pt-8 pb-32 max-w-2xl overflow-hidden'>
+    <div className='space-y-3 px-3 pt-8 pb-32 max-w-2xl mx-auto overflow-hidden'>
       {error ? (
         // Handle the error condition
         <div>Error fetching messages: {error.message}</div>
       ) : messages ? (
         // Render messages if available
-        messages.map((message) => (
+        (messages || initialMessages).map((message) => (
           <MessageComponents key={message.id} message={message} />
         ))
       ) : (

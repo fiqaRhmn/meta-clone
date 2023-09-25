@@ -5,16 +5,17 @@ import { v4 as uuid } from 'uuid'
 import { Message } from '@/typing'
 import useSWR from 'swr'
 import fetcher from '@/util/fetchMessages'
+import { useSession } from 'next-auth/react'
 
 function ChatInput() {
   const [input,setInput] = useState("")
+  const { data: session } = useSession();
   const { data: messages, error, mutate } = useSWR('/api/getMessages', fetcher);
 
-  console.log(messages);
   const addMessage = async (e: FormEvent<HTMLFormElement> ) =>{
     e.preventDefault(); //nothing refresh
 
-    if (!input) return; //if no input just return
+    if (!input || !session) return; //if no input just return
     const messageToSend = input; // saving input to a variable
     setInput("");//once press send input is blank
     const id = uuid();
@@ -23,9 +24,9 @@ function ChatInput() {
       id,
       message: messageToSend,
       created_at: Date.now(),
-      user: 'Afiqah',
-      profilePic: '/selfie2.jpg',
-      email:' afiqah_ika@hotmail.com'
+      user: session?.user?.name!,
+      profilePic: session?.user?.image!,
+      email: session?.user?.email!
     };
     
     const uploadMessageTpUpstash = async() => {
@@ -56,6 +57,7 @@ function ChatInput() {
       <input 
         type="text" 
         value={input}
+        disabled={!session}
         onChange={e=> setInput(e.target.value)}
         placeholder="Message" 
         className='flex-1 rounded-full border border-gray-300 
