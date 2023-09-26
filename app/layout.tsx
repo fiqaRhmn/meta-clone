@@ -1,4 +1,4 @@
-"use client"
+
 import Header from "./Header"
 import Provider from "./Provider"
 import { getServerSession } from 'next-auth/next'
